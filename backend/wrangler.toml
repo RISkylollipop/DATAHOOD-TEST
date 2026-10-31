@@ -1,0 +1,7 @@
+
+name = "datahood-api"
+main = "server.js"
+compatibility_date = "2026-10-31"
+compatibility_flags = ["nodejs_compat"]
+
+workers_dev = true
