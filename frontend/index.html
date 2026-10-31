@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+  Vite entry point. This file replaces public/index.html and must live at
+  the PROJECT ROOT, not in public/ — Vite treats index.html as the build
+  entry and resolves the <script> below as a real module graph.
+
+  Two differences from the CRA version it replaces:
+   1. %PUBLIC_URL% is gone. Vite serves public/ at '/', so plain absolute
+      paths are correct; a literal %PUBLIC_URL% would 404.
+   2. The module <script> is explicit. CRA injected the bundle tag; Vite
+      requires it in the HTML, and it points at src/index.jsx (the .js
+      files are renamed to .jsx as part of this migration).
+
+  Delete public/index.html once `npm run dev` is confirmed working — if
+  both exist, public/index.html is copied into the build output and can
+  overwrite the real one.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b6b3a" />
+
+    <!--
+      TITLE + DESCRIPTION are the landing page's, not the app's. This is a
+      single-page app, so this <head> is what a crawler sees for EVERY URL;
+      it should therefore describe the public front door, which is the only
+      surface we ask to be indexed (see public/robots.txt).
+    -->
+    <title>Noblesmegadata — Buy Airtime, Data & Pay Bills Instantly in Nigeria</title>
+    <meta name="description" content="Buy airtime and data on MTN, Glo, T2 and Airtel, pay electricity and cable bills, and verify NIN, BVN and passports — all from one wallet. Instant delivery, automatic refunds, reseller pricing." />
+    <!--
+      CANONICAL — the href here is only a default for `/`. It is REWRITTEN
+      PER ROUTE at runtime by useCanonical() in src/hooks/useCanonical.js.
+
+      That is not optional tidiness. This is a single-page app, so one
+      static canonical is served for every URL; leaving it pinned to `/`
+      told crawlers that /pricing, /support, /terms and /privacy were all
+      duplicates of the home page — while sitemap.xml simultaneously asked
+      for those four to be indexed. The two files contradicted each other
+      and the canonical would have won, quietly deindexing every sub-page.
+    -->
+    <link rel="canonical" href="https://kwarapolydata.com.ng/" />
+
+    <!-- OpenGraph: controls the preview when a link is pasted into
+         WhatsApp, which is how most Nigerian VTU traffic is actually
+         shared. og:image uses the 512px icon because it is already
+         shipped; a purpose-built 1200x630 card would render better and
+         is worth adding later. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Noblesmegadata" />
+    <meta property="og:title" content="Noblesmegadata — Buy Airtime, Data & Pay Bills Instantly" />
+    <meta property="og:description" content="Instant airtime and data on every Nigerian network, bill payments and identity verification from one wallet. Free to join." />
+    <meta property="og:url" content="https://kwarapolydata.com.ng/" />
+    <meta property="og:image" content="https://kwarapolydata.com.ng/icon-512.png" />
+    <meta property="og:locale" content="en_NG" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Noblesmegadata — Buy Airtime, Data & Pay Bills Instantly" />
+    <meta name="twitter:description" content="Instant airtime and data on every Nigerian network, bill payments and identity verification from one wallet." />
+    <meta name="twitter:image" content="https://kwarapolydata.com.ng/icon-512.png" />
+
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <!--
+      Icons are PNG derivatives of the master lockup — see
+      brand/build-brand-assets.py for how each one is cut.
+
+      favicon-32 rather than an .ico: every browser this app supports reads
+      PNG favicons, and a 32px PNG is 1.5KB against an .ico's several KB of
+      bundled sizes. apple-touch-icon is a SEPARATE file because iOS ignores
+      alpha and composites onto black — the transparent mark used everywhere
+      else would disappear, so that one is flattened onto brand navy.
+    -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!--
+      STRUCTURED DATA (schema.org / JSON-LD)
+
+      Placed in the STATIC html rather than injected by React on purpose:
+      it is then present in the served document, so every crawler sees it
+      without having to execute the bundle.
+
+      The FAQPage entries below MUST stay in sync with the FAQS array in
+      src/pages/Landing.jsx. Structured data that does not match the
+      visible page is a manual-action risk, not merely a wasted markup —
+      if you edit a question or answer there, edit it here too.
+    -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://kwarapolydata.com.ng/#organization",
+          "name": "Noblesmegadata",
+          "url": "https://kwarapolydata.com.ng/",
+          "logo": "https://kwarapolydata.com.ng/icon-512.png",
+          "areaServed": { "@type": "Country", "name": "Nigeria" }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://kwarapolydata.com.ng/#website",
+          "url": "https://kwarapolydata.com.ng/",
+          "name": "Noblesmegadata",
+          "publisher": { "@id": "https://kwarapolydata.com.ng/#organization" },
+          "inLanguage": "en-NG"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://kwarapolydata.com.ng/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How fast is delivery?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Airtime and data are delivered in seconds. Orders go straight to the network automatically, so nothing waits for a human to process it. Electricity tokens arrive with the receipt."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What happens if a transaction fails?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Your wallet is refunded automatically. Failed orders are reversed by the system and the transaction shows as refunded in your history, with the balance restored. In the rare case a reversal does not land, send us the transaction reference and we will return it."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I fund my wallet?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You are issued a dedicated bank account number in your own name. Transfer to it from any Nigerian bank app and your wallet credits automatically. There is nothing to upload and no receipt to send us."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need to pay to register?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Creating an account is completely free and you get full access to every service at User rates. Upgrading to Agent or Vendor is optional and only worth it if you buy often enough to benefit from the lower prices."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the difference between User, Agent and Vendor?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "They are pricing tiers. Every tier can use every service; Agents and Vendors simply pay less per data plan. Vendor is our cheapest rate and is intended for people reselling regularly. You can see the exact price for all three tiers on the pricing page before deciding."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Which identity documents can I verify?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "NIN, BVN, drivers licence, international passport and vehicle records, among others. Each verification produces a downloadable PDF slip you can keep or hand to whoever requested it."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my money safe?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Every purchase requires a transaction PIN that is separate from your login password, so someone holding your unlocked phone still cannot spend your balance. Wallet movements are recorded individually, and you can see the balance before and after each transaction in your history."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can I use Noblesmegadata to run my own business?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — the platform is built for it. The Agent and Vendor tiers exist so you can buy below the standard rate and sell on at your own price. Receipts are designed to be shared with your customer without exposing what you paid."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!--
+      Runtime API override. Repoints the deployed app at a different API
+      host WITHOUT rebuilding — resolveApiBase() in src/config.jsx checks it
+      before the build-time env var. Must load before the module script.
+
+      READ THIS BEFORE REACHING FOR IT IN AN OUTAGE: the inline form is
+      BLOCKED by the Content-Security-Policy that nginx now serves
+      (script-src 'self', see deploy/nginx-security-headers.conf). An
+      uncommented inline script here does not error visibly in the page —
+      it simply never runs, the override never takes effect, and the only
+      trace is a console message. That is a bad discovery to make while the
+      site is down.
+
+      The working form under CSP is an EXTERNAL same-origin file, because
+      'self' allows it. Create public/api-base.js containing:
+
+          window.__API_BASE__ = 'https://api.kwarapolydata.com.ng/api';
+
+      and uncomment the tag below. No rebuild needed for later edits —
+      public/ is copied verbatim into build/, so the file can be edited on
+      the server directly.
+
+      <script src="/api-base.js"></script>
+    -->
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

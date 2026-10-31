@@ -1,0 +1,153 @@
+/* ============================================================
+   Support page — contact channel grid.
+   Uses the same tokens as app.css so it themes automatically.
+   ============================================================ */
+
+.support-page {
+  max-width: 860px;
+}
+
+.support-head {
+  margin-bottom: 22px;
+}
+
+.support-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+
+.support-head .muted {
+  margin: 0;
+  max-width: 62ch;
+}
+
+/* ---------- Channel grid ---------- */
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--gap);
+}
+
+.support-channel {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--tr), transform var(--tr), box-shadow var(--tr);
+}
+
+.support-channel:hover,
+.support-channel:focus-visible {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Touch devices report hover on tap and leave the card stuck in the
+   lifted state, so restrict the movement to real pointers. */
+@media (hover: none) {
+  .support-channel:hover { transform: none; }
+}
+
+.support-channel-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
+.support-channel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.support-channel-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.support-channel-value {
+  font-weight: 600;
+  font-size: 15px;
+  /* Long emails must wrap rather than widen the grid track. */
+  overflow-wrap: anywhere;
+}
+
+.support-channel-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ---------- Socials ---------- */
+
+.support-socials {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.support-socials > .muted {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 4px;
+}
+
+/* ---------- Standalone (logged-out) shell ---------- */
+
+.support-standalone {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  padding: 32px 20px 56px;
+}
+
+.support-standalone-inner {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.support-back {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.support-back:hover {
+  color: var(--brand);
+}
+
+@media (max-width: 560px) {
+  .support-title { font-size: 20px; }
+  .support-standalone { padding: 20px 14px 40px; }
+}
+
+/* `.support-inline-link` deliberately lives in app.css, not here.
+   SupportLink renders inside Wallet and other pages that never import
+   this stylesheet, so the rule has to be global to apply. */

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Windows tile metadata, read by legacy Edge and pinned-site IE on
+  Windows 8/10. Referenced from index.html via <meta name="msapplication-config">.
+
+  It points at icon-192.png rather than a dedicated tile asset: Windows
+  scales it, and a bespoke tile PNG is not worth the bytes for the share
+  of Nigerian traffic that pins sites to a Windows Start menu. TileColor
+  is the emerald brand navy, matching the default theme and the
+  apple-touch-icon background, so a pinned tile looks intentional rather
+  than transparent-on-whatever.
+-->
+<browserconfig>
+  <msapplication>
+    <tile>
+      <square150x150logo src="/icon-192.png"/>
+      <TileColor>#0b6b3a</TileColor>
+    </tile>
+  </msapplication>
+</browserconfig>

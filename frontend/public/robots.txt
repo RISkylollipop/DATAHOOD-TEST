@@ -1,0 +1,40 @@
+# ============================================================
+#  robots.txt — kwarapolydata.com.ng
+# ------------------------------------------------------------
+#  Only the public marketing surface should be crawled. Everything
+#  behind authentication is disallowed, for two separate reasons:
+#
+#   1. It is pointless. /app/* and /admin/* are client-rendered behind
+#      a token, so a crawler receives the empty SPA shell and indexes a
+#      blank page under a URL a searcher can never usefully open.
+#   2. It is a disclosure risk. Admin route names describe internal
+#      capability (gateways, blacklist, verification). Keeping them out
+#      of an index removes a free reconnaissance list.
+#
+#  This is NOT an access control. robots.txt is advisory and hostile
+#  crawlers ignore it; the actual protection is requireAdmin on the API
+#  and AdminRoute on the client. Nothing here should be relied on for
+#  security.
+# ============================================================
+
+User-agent: *
+Allow: /$
+Allow: /pricing
+Allow: /support
+Allow: /terms
+Allow: /privacy
+Allow: /login
+Allow: /register
+
+# Authenticated areas — no useful content for an index.
+Disallow: /app
+Disallow: /app/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /forgot-password
+
+# The API is not a document surface. Crawling it wastes budget and can
+# trip rate limits on endpoints intended for the browser.
+Disallow: /api/
+
+Sitemap: https://kwarapolydata.com.ng/sitemap.xml

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap for kwarapolydata.com.ng
+
+  Public, indexable URLs only — it deliberately mirrors the Allow list in
+  robots.txt. Listing an authenticated route here would contradict that
+  file and ask crawlers to spend budget on a page that renders an empty
+  SPA shell.
+
+  /login and /register are intentionally omitted despite being public:
+  they are transactional endpoints, not content, and a search result
+  landing on a bare sign-in form converts worse than one landing on the
+  home page. They stay crawlable in robots.txt (so they are not treated
+  as suspicious) but are not advertised for indexing.
+
+  lastmod is the date this file was written. It must be updated when the
+  corresponding page content materially changes, or it becomes a lie
+  that crawlers learn to discount — bump it when the landing copy or the
+  legal documents are revised.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://kwarapolydata.com.ng/</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://kwarapolydata.com.ng/pricing</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://kwarapolydata.com.ng/support</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kwarapolydata.com.ng/terms</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kwarapolydata.com.ng/privacy</loc>
+    <lastmod>2026-08-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

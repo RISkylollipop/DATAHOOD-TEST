@@ -1,0 +1,80 @@
+# ============================================================
+#  systemd unit for the Node API.
+#
+#  This replaces pm2 deliberately. systemd already does everything
+#  pm2 does here — restart on crash, start on boot, log capture —
+#  without a second process manager to keep alive, and it is the
+#  thing that survives a kernel panic and a provider reboot.
+#
+#  ONE INSTANCE ONLY. Do not add a second copy of this unit or run
+#  the app clustered:
+#    - middleware/rateLimit.js uses the in-memory store, so N
+#      instances means N times the allowance on every limiter —
+#      the login brute-force guard silently weakens.
+#    - services/retentionService.js runs the NDPA purge on an
+#      in-process setInterval; two instances means two concurrent
+#      sweeps of the same rows.
+#  If this box is ever outgrown, those two need a shared store
+#  BEFORE a second instance exists, not after.
+# ============================================================
+
+[Unit]
+Description=DATAHOOD / KwaraPolyData API
+Documentation=file:///home/__APP_USER__/app/DEPLOYMENT.md
+After=network-online.target
+Wants=network-online.target
+
+# Restart rate limit. These live in [Unit], NOT [Service] — systemd
+# parses them there and merely warns ("Unknown key name") if they are
+# put with the other Restart= settings, leaving the guard silently
+# inert and the service free to hammer the database forever.
+# If it crashes 5 times in a minute it is broken, not unlucky.
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=__APP_USER__
+Group=__APP_USER__
+WorkingDirectory=/home/__APP_USER__/app/backend
+
+# Root-only file (0600). systemd reads it before dropping privileges,
+# so the app user never has permission to read the secrets itself.
+EnvironmentFile=/etc/datahood/api.env
+
+ExecStart=/usr/bin/node server.js
+
+# Always come back. A crash at 3am should not be a manual page.
+# The give-up threshold is StartLimitIntervalSec/Burst, up in [Unit].
+Restart=always
+RestartSec=3
+
+# backend/utils/logger.js writes its own files; journald catches
+# anything that escapes to stdout/stderr (boot banners, hard crashes).
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=datahood-api
+
+# ---- Hardening ----
+# The app needs to read its code, write backend/logs, and talk to the
+# network. Nothing else — utils/logger.js holds the ONLY filesystem
+# writes in the backend (mkdirSync + appendFileSync); receipts are
+# streamed to the response, never spooled to disk.
+#
+# Keep ReadWritePaths minimal AND accurate: systemd refuses to start a
+# unit that names a path which does not exist, so listing a directory
+# "just in case" turns into a server that will not boot.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/__APP_USER__/app/backend/logs
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

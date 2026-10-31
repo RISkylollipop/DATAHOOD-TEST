@@ -1,0 +1,109 @@
+# ── Root .gitignore for DATAHOOD PROJECT ──
+# Per-package ignores also live in backend/.gitignore and frontend/.gitignore.
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files — NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+.env.production
+**/.env
+
+# Build output
+build/
+dist/
+**/build/
+**/dist/
+
+# Logs (may contain tokens / diagnostic info)
+logs/
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database dumps — these contain LIVE CUSTOMER PII (real names, emails,
+# phone numbers, bank account numbers, legacy password hashes). They must
+# never reach a remote, public or private. Ignoring every .sql in the repo
+# root rather than naming files one by one: "Datahood&KwaraPolydata.sql" was
+# sitting here untracked-but-not-ignored, one `git add .` from being pushed.
+/*.sql
+
+# Schema migrations are kept OUT of the repository as well. They describe the
+# exact table layout, seeded pricing tiers and business rules of a live
+# payments platform, which is more than a public mirror needs to expose.
+# They remain on disk and `npm run db:migrate` still works locally — they are
+# simply not published. Keep a backup outside the project: git is no longer
+# the safety net for these files.
+backend/sql/
+
+# Verification artefacts. scripts/receipt_render_test.mjs writes real PDFs and
+# rasterised PNGs here on every run; they are regenerated output, not source,
+# and they carry sample customer data. brand/ is deliberately NOT ignored — the
+# 2.1MB master is the only copy the shipped assets are derived from.
+backend/tmp-receipts/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+DEPLOYMENT.md*
+ACTION-REQUIRED.md*
+SECURITY-AUDIT.md*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# SSL / certificates / private keys
+cert/
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Runtime / temporary files
+tmp/
+temp/
+.cache/
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Local database / dumps
+*.sql.gz
+*.dump
+*.sqlite
+*.sqlite3
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# Build output
+dist/
+build/
+

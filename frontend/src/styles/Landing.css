@@ -1,0 +1,917 @@
+/* ============================================================
+   Landing page — public marketing front door.
+   ------------------------------------------------------------
+   Every colour here is a custom property from theme.css. That is not
+   stylistic tidiness: the app ships FOUR themes (emerald, indigo,
+   sunset, ocean) each with a light and a dark mode, and ThemeContext
+   applies whichever the visitor last used — or their OS preference if
+   they have never visited. A single hardcoded hex would break in up to
+   seven of those eight combinations. There is no hex value below
+   outside the two gradient overlays, which are deliberately
+   alpha-only so they tint whatever brand colour is active.
+
+   PERFORMANCE
+   - `content-visibility: auto` on below-fold sections lets the browser
+     skip their layout and paint until they near the viewport. Paired
+     with `contain-intrinsic-size` so the scrollbar does not jump as
+     each one is realised (that would be a CLS regression, which is
+     exactly what we are trying to avoid).
+   - No webfont. The app uses the system font stack from theme.css, so
+     there is no font swap and no invisible-text flash.
+   - No background images anywhere; the hero wash is a CSS gradient.
+
+   ACCESSIBILITY
+   - Focus is never removed, only restyled, and uses :focus-visible so
+     mouse users do not see rings they did not ask for.
+   - Interactive targets are >= 44px tall (WCAG 2.5.8).
+   - Every animation is disabled under prefers-reduced-motion.
+   ============================================================ */
+
+/* ---------- Type roles ----------
+   TWO faces, both already resident on every device, so the page has a
+   deliberate type pairing without downloading a byte. That matters here
+   more than usual: the brief caps LCP at 1.8s over Nigerian mobile data,
+   and a display webfont is the single most expensive thing you can add to
+   a hero.
+
+   The pairing carries meaning rather than decoration, and the rule is
+   worth keeping to as the page grows:
+
+     sans (--font, from theme.css)  — anything a PERSON says.
+                                      Headlines, body copy, labels.
+     mono (--lp-mono)               — anything the SYSTEM issues.
+                                      Account numbers, references, phone
+                                      numbers, prices, counts, USSD codes.
+
+   That split is the subject's own vernacular. A VTU wallet is a machine
+   that turns numbers into numbers; every artifact it hands the customer —
+   the account number to transfer to, the reference to quote in a
+   complaint, the receipt — is machine-issued and monospaced in real life.
+   tabular-nums is what makes it hold: figures line up in a column and
+   stop shifting width as they change. */
+.lp {
+  background: var(--bg);
+  color: var(--text);
+  --lp-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+.lp-container {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.lp-narrow { max-width: 760px; }
+.lp-center-text { text-align: center; }
+.lp-center { display: flex; justify-content: center; }
+
+/* ---------- Skip link (WCAG 2.4.1) ----------
+   Off-canvas until focused, then pinned to the top-left. Not
+   display:none — that would remove it from the tab order entirely and
+   defeat the purpose. */
+.lp-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 12px 18px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 0 0 var(--radius-sm) 0;
+  font-weight: 600;
+}
+.lp-skip:focus {
+  left: 0;
+  text-decoration: none;
+}
+
+/* ---------- Shared focus treatment ---------- */
+.lp a:focus-visible,
+.lp button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- 1. Header ---------- */
+.lp-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+/* color-mix is recent; older mobile browsers get an opaque bar, which is
+   a cosmetic downgrade rather than a broken one. */
+@supports not (background: color-mix(in srgb, red 50%, transparent)) {
+  .lp-header { background: var(--bg); }
+}
+.lp-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 64px;
+}
+.lp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.lp-brand:hover { text-decoration: none; opacity: 0.85; }
+.lp-nav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.lp-nav a {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+.lp-nav a:hover { color: var(--brand); text-decoration: none; }
+.lp-header-cta { display: flex; align-items: center; gap: 10px; }
+
+/* ---------- 2. Hero ---------- */
+.lp-hero {
+  position: relative;
+  padding: 76px 0 64px;
+  overflow: hidden;
+}
+/* Alpha-only wash: picks up whichever brand colour is active, and
+   disappears cleanly in dark mode instead of muddying the background. */
+.lp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 0%, var(--brand-soft), transparent 55%),
+    radial-gradient(circle at 85% 20%, var(--brand-soft), transparent 50%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.lp-hero-inner { position: relative; }
+.lp-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand);
+  margin: 0 0 14px;
+}
+/* clamp() rather than breakpoint jumps: the headline is the LCP element,
+   so it should size fluidly without waiting on a media query. */
+/* max-width is in ch, so it scales with the clamp above. 22ch at the 54px
+   desktop size is wide enough to hold "Buy airtime and data," on one line;
+   at 15ch it was ~405px against the ~570px that line needs, so the three
+   explicit <br /> in the markup were compounded by wrapping and the
+   headline broke into a ragged five-line block. Only visible above 720px,
+   where the mobile rule below removes the cap entirely. */
+.lp-hero h1 {
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+  max-width: 22ch;
+}
+.lp-hero-accent { color: var(--brand); }
+.lp-hero-sub {
+  font-size: clamp(15.5px, 2vw, 18px);
+  color: var(--text-muted);
+  max-width: 56ch;
+  margin: 0 0 28px;
+}
+.lp-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.btn-lg { padding: 14px 24px; font-size: 16px; }
+.lp-hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lp-hero-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.lp-hero-chips svg { color: var(--success); flex-shrink: 0; }
+
+/* ---------- 3. Trust stats ---------- */
+.lp-stats {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 30px 0;
+}
+.lp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+/* Mono + tabular: these four figures sit in a row, and proportional
+   digits made them look ragged because "30,000+" and "4" set at wildly
+   different widths. See the type-roles note at the top. */
+.lp-stat-v {
+  font-family: var(--lp-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(23px, 3.2vw, 32px);
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.lp-stat-k {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ---------- Section scaffolding ----------
+   Skipped-until-needed below the fold. contain-intrinsic-size is a
+   deliberate over-estimate of a typical section so the scrollbar
+   settles early rather than lurching as sections are realised. */
+.lp-section {
+  padding: 72px 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 620px;
+}
+.lp-section-tint { background: var(--surface); }
+.lp-section-head {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.lp-section-head h2 {
+  font-size: clamp(24px, 3.4vw, 34px);
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.lp-section-head p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 16px;
+}
+
+/* ---------- 4 & 12. Card grids ---------- */
+.lp-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.lp-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+}
+.lp-section-tint .lp-card { background: var(--bg); }
+.lp-section:not(.lp-section-tint) .lp-card { background: var(--surface); }
+.lp-card-ic {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--brand-soft);
+  color: var(--brand);
+  margin-bottom: 16px;
+}
+.lp-card h3 { font-size: 17px; margin: 0 0 8px; }
+.lp-card p { color: var(--text-muted); font-size: 14.5px; margin: 0; }
+
+/* ---------- 5. Networks ----------
+   Each card carries its network's own brand colour on a top rule and a
+   dot. Four identical grey boxes reading MTN / GLO / T2 / AIRTEL told a
+   Nigerian visitor nothing they could scan — these brands are recognised
+   as colour first and read second.
+
+   --net-tint is set inline per card and falls back to the active theme
+   brand, so a network with no known hex (T2) still looks deliberate
+   rather than broken. See NETWORKS in Landing.jsx.
+
+   The colour is never the only carrier of meaning: the name is always
+   present as text, which is both WCAG 1.4.1 and the reason the tint can
+   stay decorative and aria-hidden. */
+.lp-networks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lp-network {
+  --net-tint: var(--brand);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--net-tint);
+  border-radius: var(--radius);
+  padding: 24px 12px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.lp-network-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--net-tint);
+  flex-shrink: 0;
+}
+
+/* ---------- 6. Steps ---------- */
+.lp-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+}
+.lp-step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+}
+.lp-step-n {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+.lp-step h3 { font-size: 17px; margin: 0 0 8px; }
+.lp-step p { color: var(--text-muted); font-size: 14.5px; margin: 0; }
+
+/* ---------- 7. Pricing teaser ---------- */
+.lp-price-teaser {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  list-style: none;
+  margin: 0 0 30px;
+  padding: 0;
+}
+.lp-price-teaser li {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+}
+.lp-price-net {
+  display: block;
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+.lp-price-from {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+/* Prices are machine-issued figures — mono, and tabular so the four
+   cards' amounts align on the decimal instead of drifting. */
+.lp-price-from strong {
+  font-family: var(--lp-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--brand);
+  font-size: 15px;
+}
+
+/* ---------- 8. Tiers ---------- */
+.lp-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 34px;
+}
+.lp-tier {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+}
+.lp-tier.is-highlight {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 1px var(--brand) inset;
+}
+.lp-tier-flag {
+  position: absolute;
+  top: -11px;
+  left: 24px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 999px;
+}
+.lp-tier h3 { font-size: 20px; margin: 0 0 4px; }
+.lp-tier-tag { color: var(--brand); font-size: 13.5px; font-weight: 600; margin: 0 0 18px; }
+.lp-tier ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+.lp-tier li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+.lp-tier li svg { color: var(--success); flex-shrink: 0; margin-top: 3px; }
+
+/* ---------- 9 & 10. Split feature rows ---------- */
+.lp-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.lp-split h2 {
+  font-size: clamp(23px, 3.2vw, 31px);
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.lp-split p { color: var(--text-muted); margin: 0 0 20px; font-size: 15.5px; }
+.lp-ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lp-ticks li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+}
+.lp-ticks svg { color: var(--success); flex-shrink: 0; margin-top: 3px; }
+
+/* Decorative mock panels. aria-hidden in the markup — they illustrate,
+   they do not inform, so a screen reader should skip them entirely. */
+.lp-panel {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  box-shadow: var(--shadow-sm);
+}
+.lp-section:not(.lp-section-tint) .lp-panel { background: var(--surface); }
+.lp-panel-ic {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--brand-soft);
+  color: var(--brand);
+  margin-bottom: 20px;
+}
+.lp-panel-rows { display: grid; gap: 10px; }
+.lp-panel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+}
+.lp-ok { color: var(--success); font-weight: 600; font-size: 13px; }
+
+/* ---------- SIGNATURE ELEMENT ----------
+   The dedicated virtual account card. This is the one thing on the page
+   that shows the customer a real artifact of the product rather than
+   describing it, and it is the feature the business says converts — so
+   it is where the page spends its boldness, and everything around it
+   stays quiet.
+
+   Set as a bank transfer screen, because that is what the visitor will
+   be looking at ten minutes later in their own banking app: brand
+   gradient, generous letter-spacing on the digits, mono. tabular-nums is
+   doing real work — a proportional 1 is narrower than a 0, so an account
+   number set in the body face looks visibly uneven at this size. */
+.lp-acct {
+  background: linear-gradient(150deg, var(--brand), var(--brand-strong));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.lp-acct-bank {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+  margin-bottom: 12px;
+}
+.lp-acct-no {
+  font-family: var(--lp-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(22px, 4vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin-bottom: 10px;
+}
+.lp-acct-name {
+  font-size: 13px;
+  opacity: 0.9;
+  letter-spacing: 0.01em;
+}
+.lp-acct-note {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 14px;
+}
+
+/* ---------- 13. Testimonials ---------- */
+.lp-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.lp-quote {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.lp-quote blockquote { margin: 0; }
+.lp-quote blockquote p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.lp-quote figcaption { margin-top: auto; }
+.lp-quote-name { display: block; font-weight: 700; font-size: 14px; }
+.lp-quote-role { display: block; font-size: 13px; color: var(--text-muted); }
+
+/* ---------- 14. App section ---------- */
+.lp-app-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.lp-muted-note {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* ---------- 15. FAQ ---------- */
+.lp-faq { display: grid; gap: 12px; }
+.lp-faq-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.lp-faq-item.is-open { border-color: var(--brand); }
+/* min-height 52px keeps the tap target above the 44px floor even with
+   a single-line question. */
+.lp-faq-q {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 20px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15.5px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.lp-faq-q:hover { color: var(--brand); }
+.lp-faq-chevron {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--tr);
+  margin-bottom: 3px;
+}
+.lp-faq-item.is-open .lp-faq-chevron {
+  transform: rotate(-135deg);
+  margin-bottom: -3px;
+}
+.lp-faq-a { padding: 0 20px 18px; }
+.lp-faq-a p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.65;
+  max-width: 68ch;
+}
+
+/* ---------- 16. Support channels ---------- */
+.lp-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.lp-channel {
+  min-width: 190px;
+  min-height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px 20px;
+  text-align: left;
+}
+.lp-channel:hover { border-color: var(--brand); text-decoration: none; }
+.lp-channel-k {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+.lp-channel-v { display: block; font-weight: 600; color: var(--text); }
+
+/* ---------- 17. Newsletter ---------- */
+/* Visually hidden but still read aloud and still in the tab order. The
+   email field has a real <label> for screen readers; sighted users get
+   the placeholder and the heading above. `clip` rather than
+   display:none, which would hide it from assistive tech too. */
+.lp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lp-news-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 24px auto 14px;
+  max-width: 470px;
+}
+.lp-news-form .input {
+  flex: 1 1 240px;
+  min-height: 46px;
+}
+/* 44px floor: the WCAG 2.2 target size the rest of the page holds to. */
+.lp-news-form .btn { min-height: 46px; }
+
+.lp-news-note { max-width: 520px; margin: 0 auto; }
+.lp-news-note a { text-decoration: underline; }
+
+.lp-news-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 24px auto 14px;
+  padding: 13px 20px;
+  max-width: 470px;
+  border-radius: var(--radius);
+  /* Derived from the active theme's success colour rather than a fixed
+     green, so it stays correct across all eight theme/mode combinations.
+     Older browsers without color-mix get the flat surface below. */
+  background: var(--surface);
+  background: color-mix(in srgb, var(--success) 13%, transparent);
+  color: var(--success);
+  font-weight: 600;
+  text-align: left;
+}
+.lp-news-err {
+  flex: 1 0 100%;
+  margin: 0;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+/* ---------- 18. Final CTA ---------- */
+.lp-cta {
+  padding: 76px 0;
+  background: linear-gradient(150deg, var(--brand), var(--brand-strong));
+  color: #fff;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+.lp-cta h2 {
+  font-size: clamp(25px, 3.6vw, 36px);
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.lp-cta p {
+  max-width: 52ch;
+  margin: 0 auto 28px;
+  opacity: 0.92;
+  font-size: 16.5px;
+}
+/* On the brand gradient the standard ghost button would be dark-on-dark. */
+.lp-cta .btn {
+  background: #fff;
+  color: var(--brand);
+}
+.lp-cta .btn:hover { background: rgba(255, 255, 255, 0.9); }
+.lp-cta .btn-ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.lp-cta .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); }
+
+/* ---------- 19. Footer ---------- */
+.lp-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 56px 0 26px;
+}
+.lp-footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
+  margin-bottom: 34px;
+}
+.lp-footer-brand p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 14px 0 0;
+  max-width: 34ch;
+}
+.lp-footer-col { display: flex; flex-direction: column; gap: 11px; }
+.lp-footer-col h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+}
+.lp-footer-col a { color: var(--text); font-size: 14px; }
+.lp-footer-col a:hover { color: var(--brand); text-decoration: none; }
+.lp-socials {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.lp-socials a { font-size: 14px; color: var(--text-muted); }
+.lp-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.lp-footer-legal { display: flex; gap: 18px; }
+.lp-footer-legal a { color: var(--text-muted); }
+
+/* ---------- Legal shells (/terms, /privacy) ----------
+   These are long documents people actually have to read, so the type is
+   set for reading rather than for scanning: a measure cap around 68ch,
+   generous line-height, and headings with enough space above them to
+   act as real section breaks. */
+.lp-legal h1 { font-size: clamp(26px, 4vw, 36px); margin: 0 0 20px; }
+.lp-legal p { color: var(--text-muted); font-size: 15.5px; line-height: 1.7; max-width: 68ch; }
+.lp-legal h2 {
+  font-size: 20px;
+  margin: 40px 0 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+}
+.lp-legal h3 {
+  font-size: 16px;
+  margin: 26px 0 8px;
+  color: var(--text);
+}
+.lp-legal ul { max-width: 68ch; padding-left: 20px; margin: 12px 0; }
+.lp-legal li {
+  color: var(--text-muted);
+  font-size: 15.5px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+.lp-legal strong { color: var(--text); }
+.lp-legal a { color: var(--brand); font-weight: 600; }
+
+/* Effective-date banner. Tinted rather than bordered-all-round so it
+   reads as a note about the document, not as a warning. */
+.lp-legal-meta {
+  background: var(--brand-soft);
+  border-left: 3px solid var(--brand);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin: 0 0 28px;
+}
+.lp-legal-back { margin-top: 34px; }
+
+/* ============================================================
+   Responsive. Mobile-last rather than mobile-first here because the
+   desktop grids above are the more complex case; each breakpoint
+   simply collapses columns.
+   ============================================================ */
+@media (max-width: 960px) {
+  .lp-cards,
+  .lp-quotes,
+  .lp-tiers,
+  .lp-steps { grid-template-columns: repeat(2, 1fr); }
+  .lp-split { grid-template-columns: 1fr; gap: 34px; }
+  /* Without this the mock panel would sit ABOVE the heading it
+     illustrates once the columns stack, which reads as a stray box. */
+  .lp-split-rev > .lp-panel { order: 2; }
+  .lp-footer-top { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 720px) {
+  /* The nav links duplicate the footer's Services/Company columns, so
+     hiding them costs nothing and avoids a hamburger menu — and its
+     focus-trap obligations — on the one page that does not need one. */
+  .lp-nav { display: none; }
+  .lp-section { padding: 52px 0; }
+  .lp-hero { padding: 52px 0 44px; }
+  .lp-hero h1 { max-width: none; }
+  .lp-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 26px 16px; }
+  .lp-networks { grid-template-columns: repeat(2, 1fr); }
+  .lp-price-teaser { grid-template-columns: repeat(2, 1fr); }
+  .lp-cards,
+  .lp-quotes,
+  .lp-tiers,
+  .lp-steps { grid-template-columns: 1fr; }
+  .lp-cta { padding: 56px 0; }
+  .lp-footer-top { grid-template-columns: 1fr; gap: 28px; }
+  .lp-hero-actions .btn,
+  .lp-cta .btn { width: 100%; }
+  .lp-channel { min-width: 0; width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .lp-brand span { font-size: 16px; }
+  .lp-header-cta .btn { padding: 7px 10px; }
+}
+
+/* ---------- Reduced motion ----------
+   The chevron rotation is the only transition on this page, but the
+   global `--tr` is used by .btn as well, so neutralise transitions
+   wholesale for anyone who has asked for stillness. */
+@media (prefers-reduced-motion: reduce) {
+  .lp *,
+  .lp *::before,
+  .lp *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Print ----------
+   Someone printing the page wants the content, not a sticky bar or a
+   dark gradient burning through their toner. */
+@media print {
+  .lp-header,
+  .lp-skip,
+  .lp-hero::before { display: none; }
+  .lp-cta { background: none; color: #000; }
+  .lp-section { content-visibility: visible; }
+}

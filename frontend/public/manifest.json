@@ -1,0 +1,13 @@
+{
+  "short_name": "DATAHOOD",
+  "name": "DATAHOOD — VTU & Identity Verification",
+  "icons": [
+    { "src": "icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any" },
+    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0b6b3a",
+  "background_color": "#ffffff"
+}

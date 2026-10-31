@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Environment — NEVER commit real secrets
+.env
+.env.local
+.env.production
+
+# Schema migrations — kept out of the published repo. Note the pattern is
+# `sql/`, NOT `./sql/`: gitignore has no notion of a leading './', so that
+# form silently matches nothing. A leading slash would anchor to this
+# directory, which is also fine here, but the bare form is conventional.
+sql/
+
+# Postman environments — these hold real JWTs once you run the login
+# request, because Postman writes captured values straight back into the
+# active environment. The collection itself is tracked and safe: it now
+# carries only {{baseUrl}}, so there is nothing secret for Postman to
+# persist into it. Import the .example file and fill it in locally.
+postman/*.postman_environment.json
+!postman/*.postman_environment.example.json
+
+# Logs (may contain diagnostic info)
+logs/
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build output
+dist/
+build/
