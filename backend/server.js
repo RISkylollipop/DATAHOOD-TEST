@@ -162,7 +162,7 @@ app.use('/api', limiter);
 
 // ---------- Health check (used by uptime monitors) ----------
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'Noblesmegadata-api', time: new Date().toISOString() });
+  res.json({ status: 'ok', service: 'Datahood-api', time: new Date().toISOString() });
 });
 
 // ---------- Routes ----------

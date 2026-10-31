@@ -1,5 +1,5 @@
 {
-  "name": "kwarapolydata-backend",
+  "name": "datahood-backend",
   "version": "1.0.0",
   "description": "VTU Platform Backend - Node.js + Express",
   "main": "server.js",
@@ -10,7 +10,7 @@
     "db:migrate": "node scripts/migrate.js"
   },
   "keywords": ["vtu", "airtime", "data", "bills"],
-  "author": "Dhammy",
+  "author": "RISky",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
