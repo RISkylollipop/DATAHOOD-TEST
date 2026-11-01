@@ -47,7 +47,7 @@ export function Layout() {
       {open && <div className="sidebar-backdrop" onClick={close} />}
       <aside className={`sidebar ${open ? 'open' : ''}`}>
         <div className="side-brand">
-          <img src="/logo-mark.p" alt="" className="brand-mark" width={28} height={28} /> Noblesmegadata
+          <img src="/logo-mark.png" alt="" className="brand-mark" width={28} height={28} /> Datahood
         </div>
         <nav>
           {NAV.map(link)}

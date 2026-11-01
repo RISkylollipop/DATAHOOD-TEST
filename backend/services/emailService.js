@@ -15,7 +15,7 @@
 //  Requires in .env:
 //    RESEND_API_KEY — from resend.com/api-keys
 //    MAIL_FROM      — a sender on a domain VERIFIED in Resend
-//                     (mail.Noblesmegadata.com.ng). Resend refuses
+//                     (mail.kwarapolydata.com.ng). Resend refuses
 //                     to send from an unverified domain, so this
 //                     is not interchangeable with any old mailbox.
 // ============================================================
@@ -26,7 +26,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /** Verified sender. Read per-call so .env edits need no code change. */
-const fromAddress = () => process.env.MAIL_FROM || 'support@mail.Noblesmegadata.com.ng';
+const fromAddress = () => process.env.MAIL_FROM || 'support@mail.kwarapolydata.com.ng';
 
 /**
  * Where operational alerts go. Exported because blacklistController and
@@ -70,7 +70,7 @@ function getClient() {
  */
 export async function sendEmail({ to, subject, text, html, headers, attachments }) {
   const { data, error } = await getClient().emails.send({
-    from: `${process.env.MAIL_FROM_NAME || 'Noblesmegadata'} <${fromAddress()}>`,
+    from: `${process.env.MAIL_FROM_NAME || 'DATAHOOD'} <${fromAddress()}>`,
     to: Array.isArray(to) ? to : [to],
     subject,
     text,
@@ -102,7 +102,7 @@ export async function sendDowntimeAlert(message, meta = {}) {
   const timestamp = new Date().toISOString();
 
   const text = `
-🚨 Noblesmegadata Downtime Alert
+🚨 Datahood Downtime Alert
 
 Time: ${timestamp}
 Environment: ${process.env.NODE_ENV}
@@ -128,7 +128,7 @@ This is an automated alert. Check logs immediately.
 
   await sendEmail({
     to: adminEmail,
-    subject: `🚨 [ALERT] Noblesmegadata Downtime: ${message.substring(0, 50)}`,
+    subject: `🚨 [ALERT] Datahood Downtime: ${message.substring(0, 50)}`,
     text,
     html,
   });
@@ -138,8 +138,8 @@ This is an automated alert. Check logs immediately.
  * Send email verification code at signup.
  */
 export async function sendVerificationEmail(email, name, code) {
-  const subject = 'Verify Your Noblesmegadata Account';
-  const text = `Hi ${name},\n\nYour verification code is: ${code}\n\nEnter this code to activate your account.\n\nThank you,\nNoblesmegadata Team`;
+  const subject = 'Verify Your Datahood Account';
+  const text = `Hi ${name},\n\nYour verification code is: ${code}\n\nEnter this code to activate your account.\n\nThank you,\n Datahood Team`;
   const html = `
 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
   <h2>Verify Your Account</h2>
@@ -150,7 +150,7 @@ export async function sendVerificationEmail(email, name, code) {
   </div>
   <p>Enter this code on the website to activate your account.</p>
   <p>If you didn't sign up, please ignore this email.</p>
-  <p>Thank you,<br>Noblesmegadata Team</p>
+  <p>Thank you,<br>Datahood Team</p>
 </div>
   `;
   await sendEmail({ to: email, subject, text, html });
@@ -162,7 +162,7 @@ export async function sendVerificationEmail(email, name, code) {
 export async function sendPasswordResetEmail(email, name, resetToken) {
   const resetLink = `${process.env.CLIENT_ORIGINS?.split(',')[0]}/reset-password?token=${resetToken}`;
   const subject = 'Reset Your Password';
-  const text = `Hi ${name},\n\nClick this link to reset your password:\n${resetLink}\n\nThis link expires in 1 hour.\n\nNoblesMegadata Team`;
+  const text = `Hi ${name},\n\nClick this link to reset your password:\n${resetLink}\n\nThis link expires in 1 hour.\n\n Datahood Team`;
   const html = `
 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
   <h2>Reset Your Password</h2>
@@ -172,7 +172,7 @@ export async function sendPasswordResetEmail(email, name, resetToken) {
     <a href="${escapeForEmail(resetLink)}" style="background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
   </div>
   <p>This link expires in 1 hour. If you didn't request this, ignore this email.</p>
-  <p>Noblesmegadata Team</p>
+  <p>Datahood Team</p>
 </div>
   `;
   await sendEmail({ to: email, subject, text, html });
@@ -188,7 +188,7 @@ export async function sendPasswordResetEmail(email, name, resetToken) {
 //  never block or roll back a money movement.
 // ============================================================
 
-const SITE_NAME = process.env.MAIL_FROM_NAME || 'Noblesmegadata';
+const SITE_NAME = process.env.MAIL_FROM_NAME || 'Datahood';
 
 function naira(n) {
   const v = Number(n || 0);
@@ -347,18 +347,18 @@ export async function sendReceiptEmail({ to, name, service, ref, date, attachmen
 //  email column.
 // ============================================================
 
-// The customer-facing brand. `Noblesmegadata` is the domain the business
-// operates under; Noblesmegadata is what the audience actually recognises, and
+// The customer-facing brand. `Datahood` is the domain the business
+// operates under; Datahood is what the audience actually recognises, and
 // it is what the landing page, the receipts and the app header all say.
 // A newsletter signed with a name the reader has never seen gets marked as
 // spam, so this is a deliverability decision as much as a branding one.
 
-const BRAND = process.env.PUBLIC_BRAND || 'Noblesmegadata';
+const BRAND = process.env.PUBLIC_BRAND || 'Datahood';
 
 /** First absolute origin from CLIENT_ORIGINS — where the links must point. */
 export function siteOrigin() {
   const first = String(process.env.CLIENT_ORIGINS || '').split(',')[0].trim();
-  return first || 'https://noblesmegadata.com.ng';
+  return first || 'https://kwarapolydata.com.ng';
 }
 
 
