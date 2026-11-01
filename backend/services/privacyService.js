@@ -109,7 +109,7 @@ export async function buildExportBundle(sId) {
 
   return {
     exportedAt: new Date().toISOString(),
-    subject: 'This file contains the personal data Noblesmegadata holds about your account.',
+    subject: 'This file contains the personal data Datahood holds about your account.',
 
     account: {
       accountId: user.sId,

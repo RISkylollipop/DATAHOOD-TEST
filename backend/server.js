@@ -229,7 +229,7 @@ async function start() {
   }
 
   app.listen(PORT, () => {
-    logger.boot(`🚀 Noblesmegadata API running on port ${PORT}`);
+    logger.boot(`🚀 Datahood API running on port ${PORT}`);
   });
 
   // Retention sweeps: redact old verification photos/details, purge

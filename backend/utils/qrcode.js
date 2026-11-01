@@ -1,5 +1,5 @@
 /**
- * Noblesmegadata — dependency-free QR encoder (ISO/IEC 18004), byte mode.
+ * Datahood — dependency-free QR encoder (ISO/IEC 18004), byte mode.
  *
  * Exists for exactly one job: rendering the otpauth:// URI from utils/totp.js
  * as something an admin can point Google Authenticator at. It is NOT a
