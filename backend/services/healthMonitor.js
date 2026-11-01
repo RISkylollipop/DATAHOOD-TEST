@@ -35,6 +35,8 @@ async function checkDatabase() {
         text: `Database connection restored at ${new Date().toISOString()}.`,
       });
       logger.info('Database recovered');
+
+      
     }
   } catch (err) {
     if (state.database.up) {

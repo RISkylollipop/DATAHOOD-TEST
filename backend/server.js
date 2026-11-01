@@ -134,7 +134,7 @@ app.use(express.urlencoded({ extended: false, limit: '32kb', parameterLimit: 100
 // legitimate users at once.
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 1200,                // ~80 req/min sustained per IP
+  max: 100,                // ~80 req/min sustained per IP
   standardHeaders: true,
   legacyHeaders: false,
   // Two classes of request are deliberately exempt from this budget:

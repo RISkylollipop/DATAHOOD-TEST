@@ -219,7 +219,7 @@ export async function sendWalletEmail({ to, name, kind, amount, oldBalance, newB
     <div>Old Balance: <strong>${naira(oldBalance)}</strong></div>
     <div>New Balance: <strong>${naira(newBalance)}</strong></div>
   </div>
-  <p style="margin-top:18px;color:#555">Thank you,<br/>${SITE_NAME} Team</p>
+  <p style="margin-top:18px;color:#555">Thank you for Trusting Us,<br/>${SITE_NAME} Team</p>
 </div>
   `.trim();
   const text = `Hi ${name || 'there'}, your account has been ${action} with ${naira(amount)}.`
@@ -321,7 +321,7 @@ export async function sendReceiptEmail({ to, name, service, ref, date, attachmen
 
   const text = [
     `Hi ${name || 'there'}, your ${svc} transaction was successful.`,
-    attachment ? 'Your receipt is attached as a PDF.' : '',
+    attachment ? 'Your receipt is attached as a PDF below.' : '',
     ...rows.map(([k, v]) => `${k}: ${v}`),
   ].filter(Boolean).join('\n');
 
@@ -358,7 +358,7 @@ const BRAND = process.env.PUBLIC_BRAND || 'Datahood';
 /** First absolute origin from CLIENT_ORIGINS — where the links must point. */
 export function siteOrigin() {
   const first = String(process.env.CLIENT_ORIGINS || '').split(',')[0].trim();
-  return first || 'https://kwarapolydata.com.ng';
+  return first || 'https://app.datahood.kwarapolydata.com.ng';
 }
 
 
@@ -388,7 +388,7 @@ export function newsletterShell({ title, bodyHtml, unsubscribeUrl, preheader }) 
 ${bodyHtml}
     </td></tr>
     <tr><td style="padding:22px 30px;background:#f8fafc;border-top:1px solid #e2e8f0;font:12px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#64748b">
-      <p style="margin:0 0 8px">${BRAND} — airtime, data, cable TV and bill payments in Nigeria.</p>
+      <p style="margin:0 0 8px">${BRAND} — You Trusted Data Partner since 2021.</p>
       ${safeUnsub ? `<p style="margin:0">You are receiving this because you confirmed a subscription at <a href="${origin}" style="color:#475569">${origin.replace(/^https?:\/\//, '')}</a>.<br/>
       <a href="${safeUnsub}" style="color:#475569;text-decoration:underline">Unsubscribe</a> at any time — one click, no questions.</p>`
     : '<p style="margin:0">This is a one-off message about your subscription, not a marketing email.</p>'}
