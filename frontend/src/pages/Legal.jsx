@@ -82,14 +82,14 @@ export function Terms() {
       <Effective />
 
       <p>
-        These terms are the agreement between you and Noblesmegadata ("we", "us")
+        These terms are the agreement between you and DATAHOOD ("we", "us")
         covering your use of our website and services. By creating an account
         you accept them. Please read them — particularly section 6, which
         explains when a transaction can fail and what we do about it, and
         section 9, which limits what we are responsible for.
       </p>
 
-      <h2>1. Who can use Noblesmegadata</h2>
+      <h2>1. Who can use DATAHOOD</h2>
       <p>
         You must be at least 18 years old and legally able to enter a contract.
         You must register with your own accurate details. Accounts registered
@@ -117,7 +117,7 @@ export function Terms() {
 
       <h2>3. What we provide</h2>
       <p>
-        Noblesmegadata lets you buy airtime and mobile data, pay electricity and cable
+        DATAHOOD lets you buy airtime and mobile data, pay electricity and cable
         television bills, and run identity verification checks, funded from a
         wallet balance you top up in advance.
       </p>
@@ -214,7 +214,7 @@ export function Terms() {
 
       <h2>8. Things you must not do</h2>
       <p>
-        Do not use Noblesmegadata for fraud, money laundering, or any illegal purpose.
+        Do not use DATAHOOD for fraud, money laundering, or any illegal purpose.
         Do not attempt to gain unauthorised access to our systems, probe them for
         vulnerabilities, scrape them, or interfere with other users' accounts.
         Do not resell identity verification checks to people who lack a lawful
@@ -284,7 +284,7 @@ export function Privacy() {
       <Effective />
 
       <p>
-        This policy explains what personal data Noblesmegadata collects, why, who we
+        This policy explains what personal data DATAHOOD collects, why, who we
         share it with, how long we keep it, and what you can do about it. It is
         written to match what our systems actually do. We are the data
         controller for the information described here, and we handle it in line

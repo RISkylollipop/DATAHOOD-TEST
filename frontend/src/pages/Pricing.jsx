@@ -54,7 +54,7 @@ function Pricing() {
     <div className="pricing-topbar">
       <Link to="/login" className="pricing-brand">
         <img src="/logo-mark.png" alt="" className="brand-mark" width={26} height={26} />
-        Noblesmegadata
+        DATAHOOD
       </Link>
       <div className="pricing-topbar-actions">
         <Link to="/login" className="btn btn-ghost btn-sm">Sign in</Link>

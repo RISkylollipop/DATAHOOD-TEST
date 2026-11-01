@@ -116,7 +116,7 @@ export default function ForgotPassword() {
   return (
     <div className="auth-wrap">
       <div className="auth-side">
-        <div className="auth-logo"><img src="/logo-mark.png" alt="" className="brand-mark" width={30} height={30} /> Noblesmegadata</div>
+        <div className="auth-logo"><img src="/logo-mark.png" alt="" className="brand-mark" width={30} height={30} /> Datahood</div>
         <div>
           <h1>Locked out?<br />Let's fix that.</h1>
           <ul className="feat-list">
@@ -125,7 +125,7 @@ export default function ForgotPassword() {
             <li><IcCheck size={18} /> Resetting signs you out everywhere else</li>
           </ul>
         </div>
-        <div className="small" style={{ opacity: 0.8 }}>© {new Date().getFullYear()} Noblesmegadata. All rights reserved.</div>
+        <div className="small" style={{ opacity: 0.8 }}>© {new Date().getFullYear()} Datahood. All rights reserved.</div>
       </div>
 
       <div className="auth-form-col">

@@ -205,7 +205,7 @@ const FAQS = [
     a: 'Every purchase requires a transaction PIN that is separate from your login password, so someone holding your unlocked phone still cannot spend your balance. Wallet movements are recorded individually, and you can see the balance before and after each transaction in your history.',
   },
   {
-    q: 'Can I use Noblesmegadata to run my own business?',
+    q: 'Can I use Datahood to run my own business?',
     a: 'Yes — the platform is built for it. The Agent and Vendor tiers exist so you can buy below the standard rate and sell on at your own price. Receipts are designed to be shared with your customer without exposing what you paid.',
   },
 ];
@@ -347,9 +347,9 @@ export default function Landing() {
       {/* ── 1. Header ─────────────────────────────────────── */}
       <header className="lp-header">
         <div className="lp-container lp-header-inner">
-          <Link to="/" className="lp-brand" aria-label="Noblesmegadata home">
+          <Link to="/" className="lp-brand" aria-label="Datahood home">
             <img src="/logo-mark.png" alt="" width={32} height={32} className="brand-mark" />
-            <span>Noblesmegadata</span>
+            <span>Datahood</span>
           </Link>
           <nav className="lp-nav" aria-label="Primary">
             <a href="#services">Services</a>
@@ -561,7 +561,7 @@ export default function Landing() {
               <div className="lp-acct">
                 <div className="lp-acct-bank">Your dedicated account</div>
                 <div className="lp-acct-no">0•• ••• ••••</div>
-                <div className="lp-acct-name">Noblesmegadata / YOUR NAME</div>
+                <div className="lp-acct-name">Datahood / YOUR NAME</div>
               </div>
               <div className="lp-acct-note">Credits automatically, 24/7</div>
             </div>
@@ -645,7 +645,7 @@ export default function Landing() {
           <div className="lp-container lp-narrow lp-center-text">
             <h2 id="lp-app-h">Works on your phone, today</h2>
             <p>
-              Noblesmegadata runs in your browser and installs to your home screen like an
+              Datahood runs in your browser and installs to your home screen like an
               app — no download required, and it stays out of your storage.
             </p>
             {hasApps ? (
@@ -761,9 +761,9 @@ export default function Landing() {
         <div className="lp-container">
           <div className="lp-footer-top">
             <div className="lp-footer-brand">
-              <Link to="/" className="lp-brand" aria-label="Noblesmegadata home">
+              <Link to="/" className="lp-brand" aria-label="Datahood home">
                 <img src="/logo-mark.png" alt="" width={30} height={30} className="brand-mark" />
-                <span>Noblesmegadata</span>
+                <span>Datahood</span>
               </Link>
               <p>
                 Airtime, data, bills and identity verification for Nigeria — from one
@@ -806,7 +806,7 @@ export default function Landing() {
           )}
 
           <div className="lp-footer-bottom">
-            <span>&copy; {year} Noblesmegadata. All rights reserved.</span>
+            <span>&copy; {year} Datahood. All rights reserved.</span>
             <span className="lp-footer-legal">
               <Link to="/terms">Terms</Link>
               <Link to="/privacy">Privacy</Link>

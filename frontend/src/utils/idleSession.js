@@ -28,7 +28,7 @@
 // ============================================================
 
 /** Same default as the backend's SESSION_IDLE_MINUTES. */
-export const DEFAULT_IDLE_MS = 15 * 60 * 1000;
+export const DEFAULT_IDLE_MS = 20 * 60 * 1000;
 
 /**
  * Events that mean a person is there. 'visibilitychange' is included

@@ -31,13 +31,13 @@ const NOW = 1_700_000_000_000;
 const idle = (agoMs, win = DEFAULT_IDLE_MS) => isIdleExpired(NOW - agoMs, NOW, win);
 
 // ---- The window is 15 minutes, and matches the server's default ------------
-check('default window is 15 minutes', DEFAULT_IDLE_MS, 15 * MIN);
+check('default window is 20 minutes', DEFAULT_IDLE_MS, 20 * MIN);
 
 // ---- The boundary ----------------------------------------------------------
 check('just used, still signed in', idle(0), false);
-check('14 minutes idle, still signed in', idle(14 * MIN), false);
-check('one second short of 15, still signed in', idle(15 * MIN - 1000), false);
-check('exactly 15 minutes, signed out', idle(15 * MIN), true);
+check('19 minutes idle, still signed in', idle(14 * MIN), false);
+check('one second short of 20, still signed in', idle(15 * MIN - 1000), false);
+check('exactly 15 minutes, signed out', idle(20 * MIN), true);
 check('an hour idle, signed out', idle(60 * MIN), true);
 
 // A working session must NEVER expire. This is the failure that would matter

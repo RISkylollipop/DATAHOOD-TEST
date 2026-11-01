@@ -44,7 +44,7 @@ export default function Login() {
     <div className="auth-wrap">
       <div className="auth-side">
         <div className="auth-logo"><img src="" 
-        alt="LG" className="brand-mark" width={30} height={30} />Noblesmegadata</div>
+        alt="LG" className="brand-mark" width={30} height={30} />DATAHOOD</div>
         <div>
           <h1>Everything you need,<br />in one wallet.</h1>
           <ul className="feat-list">
